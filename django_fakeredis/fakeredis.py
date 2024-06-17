@@ -1,6 +1,7 @@
 import os
 import fakeredis
-from unittest.mock import patch, _get_target, _importer
+import pkgutil
+from unittest.mock import patch, _get_target
 
 from django.test import override_settings
 
@@ -36,7 +37,7 @@ class FakeRedis:
             )
             # Recheck path in mock lib
             _get_target(path)
-            target = _importer(path)
+            target = pkgutil.resolve_name(path)
             if callable(target):
                 self.patch = patch(self.path, get_fake_redis)
             else:
